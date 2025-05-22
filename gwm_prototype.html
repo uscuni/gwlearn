@@ -1,0 +1,1637 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Exploration of geographically weighted random forest classification modelling &#8212; gwlearn 0.1.dev43+g7ea332f documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=a80dc075" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=5f267d4e"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'gwm_prototype';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">gwlearn 0.1.dev43+g7ea332f documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="api.html">API reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/gwlearn.linear_model.GWLogisticRegression.html">gwlearn.linear_model.GWLogisticRegression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/gwlearn.ensemble.GWRandomForestClassifier.html">gwlearn.ensemble.GWRandomForestClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/gwlearn.ensemble.GWGradientBoostingClassifier.html">gwlearn.ensemble.GWGradientBoostingClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/gwlearn.search.BandwidthSearch.html">gwlearn.search.BandwidthSearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/gwlearn.base.BaseClassifier.html">gwlearn.base.BaseClassifier</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">For contributors</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/uscuni/gwlearn">GitHub</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/gwm_prototype.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Exploration of geographically weighted random forest classification modelling</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-forest">Random forest</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gradient-boosting">Gradient boosting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logistic-regression">Logistic regression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bandwidth-search">Bandwidth search</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction">Prediction</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="exploration-of-geographically-weighted-random-forest-classification-modelling">
+<h1>Exploration of geographically weighted random forest classification modelling<a class="headerlink" href="#exploration-of-geographically-weighted-random-forest-classification-modelling" title="Link to this heading">#</a></h1>
+<p>To-do:</p>
+<ul class="simple">
+<li><p>[x] global model</p></li>
+<li><p>[x] model evaluation</p></li>
+<li><p>[x] bandwidth optimisation</p></li>
+<li><p>[x] feature importances</p></li>
+<li><p>[x] golden section bandwidth selection</p></li>
+<li><p>[x] other metrics than accuracy</p></li>
+<li><p>[x] generic support (logistic regression, gradient boosting)</p></li>
+<li><p>[x] dedicated classes</p></li>
+<li><p>[ ] local performance of models that do not support OOB</p>
+<ul>
+<li><p>[x] with logistic regression I guess we can do predict_proba and measure those on the full sample directly</p></li>
+<li><p>with gradient boosting we can’t as the model has seen the data - might need to split to train/test to mimic OOB.</p></li>
+</ul>
+</li>
+<li><p>[x] logistic regression local coefficients</p></li>
+<li><p>[x] (optionally) predict method</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">geodatasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn</span><span class="w"> </span><span class="kn">import</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">preprocessing</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">gwlearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">GWGradientBoostingClassifier</span><span class="p">,</span> <span class="n">GWRandomForestClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gwlearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">GWLogisticRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gwlearn.search</span><span class="w"> </span><span class="kn">import</span> <span class="n">BandwidthSearch</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Get sample data</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;geoda.ncovr&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(3085, 70)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># It is in the geographic coords in the  US and we need to work with distances. Re-project and use only points as the graph builder will require points anyway.</span>
+<span class="n">gdf</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">set_geometry</span><span class="p">(</span><span class="n">gdf</span><span class="o">.</span><span class="n">representative_point</span><span class="p">())</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="mi">5070</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;FH90&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;FH90&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="random-forest">
+<h2>Random forest<a class="headerlink" href="#random-forest" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gwrf</span> <span class="o">=</span> <span class="n">GWRandomForestClassifier</span><span class="p">(</span>
+    <span class="n">bandwidth</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span>
+    <span class="n">fixed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">keep_models</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">gwrf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">gdf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">9</span><span class="p">:</span><span class="mi">15</span><span class="p">],</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">gdf</span><span class="o">.</span><span class="n">geometry</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;gwlearn.ensemble.GWRandomForestClassifier at 0x14f99d2b0&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Global OOB accuracy for the GW model measured based on OOB predictions from individual local trees.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gwrf</span><span class="o">.</span><span class="n">oob_score_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.7640588744588744
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gwrf</span><span class="o">.</span><span class="n">oob_precision_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.7681732957886799
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gwrf</span><span class="o">.</span><span class="n">oob_recall_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.7623085320389149
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gwrf</span><span class="o">.</span><span class="n">oob_balanced_accuracy_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.7640744820936438)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Local OOB accuracy.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gwrf</span><span class="o">.</span><span class="n">local_oob_score_</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: &gt;
+</pre></div>
+</div>
+<img alt="_images/f36dfd3578dcfddeaa2aad7964b476de41dce0046a758336c4cf2e88980ea3bc.png" src="_images/f36dfd3578dcfddeaa2aad7964b476de41dce0046a758336c4cf2e88980ea3bc.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gwrf</span><span class="o">.</span><span class="n">local_oob_precision_</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: &gt;
+</pre></div>
+</div>
+<img alt="_images/1170fdf007c23820ab8cff4972c4f61c63919e4effed8f93bffcff0d6f2b7f98.png" src="_images/1170fdf007c23820ab8cff4972c4f61c63919e4effed8f93bffcff0d6f2b7f98.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gwrf</span><span class="o">.</span><span class="n">local_oob_recall_</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: &gt;
+</pre></div>
+</div>
+<img alt="_images/37d07daae16fb52b6e49508508fbbade673c68650d75c0af7371653fe95c1da0.png" src="_images/37d07daae16fb52b6e49508508fbbade673c68650d75c0af7371653fe95c1da0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gwrf</span><span class="o">.</span><span class="n">local_oob_balanced_accuracy_</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: &gt;
+</pre></div>
+</div>
+<img alt="_images/6f324e1987b3d8fa60ccb310a6cd246e6a1f05e5b544eae5a0c38fc515b274f2.png" src="_images/6f324e1987b3d8fa60ccb310a6cd246e6a1f05e5b544eae5a0c38fc515b274f2.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gwrf</span><span class="o">.</span><span class="n">local_oob_f1_macro_</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: &gt;
+</pre></div>
+</div>
+<img alt="_images/11638a4888102b4baf218613461c25f7fc2d6d077631390be189712dc4217495.png" src="_images/11638a4888102b4baf218613461c25f7fc2d6d077631390be189712dc4217495.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gwrf</span><span class="o">.</span><span class="n">local_oob_f1_micro_</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: &gt;
+</pre></div>
+</div>
+<img alt="_images/f36dfd3578dcfddeaa2aad7964b476de41dce0046a758336c4cf2e88980ea3bc.png" src="_images/f36dfd3578dcfddeaa2aad7964b476de41dce0046a758336c4cf2e88980ea3bc.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gwrf</span><span class="o">.</span><span class="n">local_oob_f1_weighted_</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: &gt;
+</pre></div>
+</div>
+<img alt="_images/af7d29a9de2d48f4218271d9e733bc3181c38755000a4446fe32933b3eaedcdc.png" src="_images/af7d29a9de2d48f4218271d9e733bc3181c38755000a4446fe32933b3eaedcdc.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gwrf</span><span class="o">.</span><span class="n">focal_proba_</span><span class="p">[</span><span class="kc">True</span><span class="p">],</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: &gt;
+</pre></div>
+</div>
+<img alt="_images/61bab7d000e95c2e1c5664b2624083bcdd95d9f573ee058cd1293a91fc5f3942.png" src="_images/61bab7d000e95c2e1c5664b2624083bcdd95d9f573ee058cd1293a91fc5f3942.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Set1_r&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: &gt;
+</pre></div>
+</div>
+<img alt="_images/efd6ebc1e4c50b7f2a0c294c2885eee397b83067a19b4c2bcef2a94e30b166d4.png" src="_images/efd6ebc1e4c50b7f2a0c294c2885eee397b83067a19b4c2bcef2a94e30b166d4.png" />
+</div>
+</div>
+<p>Global accuracy for the GW model measured based on prediction of focals.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gwrf</span><span class="o">.</span><span class="n">score_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.7670995670995671
+</pre></div>
+</div>
+</div>
+</div>
+<p>F1 scores for the GW model measured based on prediction of focals.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gwrf</span><span class="o">.</span><span class="n">f1_macro_</span><span class="p">,</span> <span class="n">gwrf</span><span class="o">.</span><span class="n">f1_micro_</span><span class="p">,</span> <span class="n">gwrf</span><span class="o">.</span><span class="n">f1_weighted_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.7668975720794766, 0.7670995670995671, 0.7671589773995937)
+</pre></div>
+</div>
+</div>
+</div>
+<p>OOB score (accuracy) of the global model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gwrf</span><span class="o">.</span><span class="n">global_model</span><span class="o">.</span><span class="n">oob_score_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.7847649918962722
+</pre></div>
+</div>
+</div>
+</div>
+<p>Get local feature importances.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gwrf</span><span class="o">.</span><span class="n">feature_importances_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>HR60</th>
+      <th>HR70</th>
+      <th>HR80</th>
+      <th>HR90</th>
+      <th>HC60</th>
+      <th>HC70</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.163850</td>
+      <td>0.143912</td>
+      <td>0.136582</td>
+      <td>0.172506</td>
+      <td>0.176878</td>
+      <td>0.206272</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.143847</td>
+      <td>0.133286</td>
+      <td>0.116486</td>
+      <td>0.170144</td>
+      <td>0.181536</td>
+      <td>0.254703</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.143455</td>
+      <td>0.147278</td>
+      <td>0.135663</td>
+      <td>0.174209</td>
+      <td>0.163846</td>
+      <td>0.235549</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.176854</td>
+      <td>0.127674</td>
+      <td>0.119081</td>
+      <td>0.164119</td>
+      <td>0.204923</td>
+      <td>0.207349</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>3080</th>
+      <td>0.131392</td>
+      <td>0.121187</td>
+      <td>0.210867</td>
+      <td>0.080780</td>
+      <td>0.295454</td>
+      <td>0.160320</td>
+    </tr>
+    <tr>
+      <th>3081</th>
+      <td>0.152491</td>
+      <td>0.107219</td>
+      <td>0.165394</td>
+      <td>0.192854</td>
+      <td>0.222658</td>
+      <td>0.159383</td>
+    </tr>
+    <tr>
+      <th>3082</th>
+      <td>0.163262</td>
+      <td>0.195136</td>
+      <td>0.186034</td>
+      <td>0.223107</td>
+      <td>0.086872</td>
+      <td>0.145588</td>
+    </tr>
+    <tr>
+      <th>3083</th>
+      <td>0.151720</td>
+      <td>0.169970</td>
+      <td>0.197951</td>
+      <td>0.250114</td>
+      <td>0.104788</td>
+      <td>0.125457</td>
+    </tr>
+    <tr>
+      <th>3084</th>
+      <td>0.093800</td>
+      <td>0.133798</td>
+      <td>0.141794</td>
+      <td>0.204530</td>
+      <td>0.207617</td>
+      <td>0.218462</td>
+    </tr>
+  </tbody>
+</table>
+<p>3085 rows × 6 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gwrf</span><span class="o">.</span><span class="n">feature_importances_</span><span class="p">[</span><span class="s2">&quot;HC60&quot;</span><span class="p">],</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: &gt;
+</pre></div>
+</div>
+<img alt="_images/4f8db98e4b5ac47d7c2818881959a9c960f025280943a55a61a967bc273f849e.png" src="_images/4f8db98e4b5ac47d7c2818881959a9c960f025280943a55a61a967bc273f849e.png" />
+</div>
+</div>
+<p>Compare to global feature importance.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gwrf</span><span class="o">.</span><span class="n">global_model</span><span class="o">.</span><span class="n">feature_importances_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.1347237 , 0.1506066 , 0.18056572, 0.20387579, 0.12572477,
+       0.20450342])
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="gradient-boosting">
+<h2>Gradient boosting<a class="headerlink" href="#gradient-boosting" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gwgb</span> <span class="o">=</span> <span class="n">GWGradientBoostingClassifier</span><span class="p">(</span>
+    <span class="n">bandwidth</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span>
+    <span class="n">fixed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">keep_models</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">gwgb</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">gdf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">9</span><span class="p">:</span><span class="mi">15</span><span class="p">],</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">gdf</span><span class="o">.</span><span class="n">geometry</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;gwlearn.ensemble.GWGradientBoostingClassifier at 0x30576d010&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Global score (accuracy) for the GW model measured based on prediction of focals.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gwgb</span><span class="o">.</span><span class="n">score_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.7545454545454545
+</pre></div>
+</div>
+</div>
+</div>
+<p>F1 scores for the GW model measured based on prediction of focals.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gwgb</span><span class="o">.</span><span class="n">f1_macro_</span><span class="p">,</span> <span class="n">gwgb</span><span class="o">.</span><span class="n">f1_micro_</span><span class="p">,</span> <span class="n">gwgb</span><span class="o">.</span><span class="n">f1_weighted_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.75437417332864, 0.7545454545454545, 0.7546212675430609)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Get local feature importances.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gwgb</span><span class="o">.</span><span class="n">feature_importances_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>HR60</th>
+      <th>HR70</th>
+      <th>HR80</th>
+      <th>HR90</th>
+      <th>HC60</th>
+      <th>HC70</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.177807</td>
+      <td>0.126379</td>
+      <td>0.062514</td>
+      <td>0.157019</td>
+      <td>0.153172</td>
+      <td>0.323109</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.184493</td>
+      <td>0.126306</td>
+      <td>0.062823</td>
+      <td>0.167385</td>
+      <td>0.121183</td>
+      <td>0.337810</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.155949</td>
+      <td>0.137035</td>
+      <td>0.075270</td>
+      <td>0.167757</td>
+      <td>0.068638</td>
+      <td>0.395349</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.170747</td>
+      <td>0.128077</td>
+      <td>0.076032</td>
+      <td>0.156337</td>
+      <td>0.114440</td>
+      <td>0.354367</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>3080</th>
+      <td>0.101786</td>
+      <td>0.054407</td>
+      <td>0.146009</td>
+      <td>0.050640</td>
+      <td>0.585449</td>
+      <td>0.061709</td>
+    </tr>
+    <tr>
+      <th>3081</th>
+      <td>0.090220</td>
+      <td>0.077285</td>
+      <td>0.132755</td>
+      <td>0.208580</td>
+      <td>0.456479</td>
+      <td>0.034682</td>
+    </tr>
+    <tr>
+      <th>3082</th>
+      <td>0.117778</td>
+      <td>0.191602</td>
+      <td>0.192507</td>
+      <td>0.315018</td>
+      <td>0.059263</td>
+      <td>0.123832</td>
+    </tr>
+    <tr>
+      <th>3083</th>
+      <td>0.147443</td>
+      <td>0.146816</td>
+      <td>0.155618</td>
+      <td>0.384426</td>
+      <td>0.051092</td>
+      <td>0.114605</td>
+    </tr>
+    <tr>
+      <th>3084</th>
+      <td>0.023786</td>
+      <td>0.090717</td>
+      <td>0.099283</td>
+      <td>0.238252</td>
+      <td>0.430659</td>
+      <td>0.117302</td>
+    </tr>
+  </tbody>
+</table>
+<p>3085 rows × 6 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gwgb</span><span class="o">.</span><span class="n">feature_importances_</span><span class="p">[</span><span class="s2">&quot;HR90&quot;</span><span class="p">],</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: &gt;
+</pre></div>
+</div>
+<img alt="_images/8161cb01cfbf33fb56c36a0bec2628698e7c02abd8d28d01a3dfe64d1a70744c.png" src="_images/8161cb01cfbf33fb56c36a0bec2628698e7c02abd8d28d01a3dfe64d1a70744c.png" />
+</div>
+</div>
+<p>Compare to global feature importance.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gwgb</span><span class="o">.</span><span class="n">global_model</span><span class="o">.</span><span class="n">feature_importances_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.05644238, 0.05572028, 0.1228957 , 0.15106316, 0.22054067,
+       0.3933378 ])
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="logistic-regression">
+<h2>Logistic regression<a class="headerlink" href="#logistic-regression" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gwlr</span> <span class="o">=</span> <span class="n">GWLogisticRegression</span><span class="p">(</span>
+    <span class="n">bandwidth</span><span class="o">=</span><span class="mi">900_000</span><span class="p">,</span>
+    <span class="n">fixed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">keep_models</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">max_iter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">gwlr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="n">preprocessing</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">gdf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">9</span><span class="p">:</span><span class="mi">15</span><span class="p">]),</span> <span class="n">columns</span><span class="o">=</span><span class="n">gdf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">9</span><span class="p">:</span><span class="mi">15</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span>
+    <span class="p">),</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;FH90&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;FH90&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">(),</span>
+    <span class="n">gdf</span><span class="o">.</span><span class="n">geometry</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;gwlearn.linear_model.GWLogisticRegression at 0x30576cd70&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gwlr</span><span class="o">.</span><span class="n">score_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.7911936704506364
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gwlr</span><span class="o">.</span><span class="n">pred_f1_micro_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.7864280001426905
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gwlr</span><span class="o">.</span><span class="n">local_pred_f1_micro_</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: &gt;
+</pre></div>
+</div>
+<img alt="_images/4cdccb970284cf28557b5b8723cdcf777f2eb5966de4065c753077336e13eb8e.png" src="_images/4cdccb970284cf28557b5b8723cdcf777f2eb5966de4065c753077336e13eb8e.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gwlr</span><span class="o">.</span><span class="n">f1_macro_</span><span class="p">,</span> <span class="n">gwlr</span><span class="o">.</span><span class="n">f1_micro_</span><span class="p">,</span> <span class="n">gwlr</span><span class="o">.</span><span class="n">f1_weighted_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.7911541287072663, 0.7911936704506364, 0.7912401319990963)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Local coefficients</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gwlr</span><span class="o">.</span><span class="n">local_coef_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>HR60</th>
+      <th>HR70</th>
+      <th>HR80</th>
+      <th>HR90</th>
+      <th>HC60</th>
+      <th>HC70</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.286802</td>
+      <td>0.123161</td>
+      <td>0.099993</td>
+      <td>0.359248</td>
+      <td>1.357041</td>
+      <td>0.864515</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.311253</td>
+      <td>0.157535</td>
+      <td>0.046688</td>
+      <td>0.273231</td>
+      <td>1.380707</td>
+      <td>0.857892</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.299757</td>
+      <td>0.198515</td>
+      <td>0.035917</td>
+      <td>0.216032</td>
+      <td>1.324819</td>
+      <td>0.895019</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.309365</td>
+      <td>0.149005</td>
+      <td>0.073854</td>
+      <td>0.276963</td>
+      <td>1.378795</td>
+      <td>0.840442</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>3080</th>
+      <td>0.084373</td>
+      <td>0.360897</td>
+      <td>0.506413</td>
+      <td>-0.027660</td>
+      <td>1.115072</td>
+      <td>0.724758</td>
+    </tr>
+    <tr>
+      <th>3081</th>
+      <td>0.118441</td>
+      <td>0.106981</td>
+      <td>0.573711</td>
+      <td>0.347592</td>
+      <td>1.512293</td>
+      <td>0.827530</td>
+    </tr>
+    <tr>
+      <th>3082</th>
+      <td>-0.115461</td>
+      <td>0.503123</td>
+      <td>0.322601</td>
+      <td>0.657267</td>
+      <td>1.764582</td>
+      <td>1.215657</td>
+    </tr>
+    <tr>
+      <th>3083</th>
+      <td>-0.142727</td>
+      <td>0.468729</td>
+      <td>0.371395</td>
+      <td>0.609215</td>
+      <td>2.124454</td>
+      <td>1.390968</td>
+    </tr>
+    <tr>
+      <th>3084</th>
+      <td>0.324900</td>
+      <td>0.069562</td>
+      <td>0.147378</td>
+      <td>0.290290</td>
+      <td>1.263163</td>
+      <td>0.691895</td>
+    </tr>
+  </tbody>
+</table>
+<p>3085 rows × 6 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gwlr</span><span class="o">.</span><span class="n">local_coef_</span><span class="p">[</span><span class="s2">&quot;HR90&quot;</span><span class="p">],</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: &gt;
+</pre></div>
+</div>
+<img alt="_images/ca24a1a31965631739143b99b166af19e87b9cca17659c5096ca3ea715aa91cb.png" src="_images/ca24a1a31965631739143b99b166af19e87b9cca17659c5096ca3ea715aa91cb.png" />
+</div>
+</div>
+<p>Local intercepts</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gwlr</span><span class="o">.</span><span class="n">local_intercept_</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: &gt;
+</pre></div>
+</div>
+<img alt="_images/3520bc20af0e32e96e8db0cf3985f35b3e18d5ed7e2a4fb9628a45d8340b318d.png" src="_images/3520bc20af0e32e96e8db0cf3985f35b3e18d5ed7e2a4fb9628a45d8340b318d.png" />
+</div>
+</div>
+</section>
+<section id="bandwidth-search">
+<h2>Bandwidth search<a class="headerlink" href="#bandwidth-search" title="Link to this heading">#</a></h2>
+<p>Golden section search with a fixed distance bandwidth.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">search</span> <span class="o">=</span> <span class="n">BandwidthSearch</span><span class="p">(</span>
+    <span class="n">GWLogisticRegression</span><span class="p">,</span>
+    <span class="n">fixed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">search_method</span><span class="o">=</span><span class="s2">&quot;golden_section&quot;</span><span class="p">,</span>
+    <span class="n">criterion</span><span class="o">=</span><span class="s2">&quot;aic&quot;</span><span class="p">,</span>
+    <span class="n">max_iterations</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">min_bandwidth</span><span class="o">=</span><span class="mi">250_000</span><span class="p">,</span>
+    <span class="n">max_bandwidth</span><span class="o">=</span><span class="mi">2_000_000</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">max_iter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">gdf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">9</span><span class="p">:</span><span class="mi">15</span><span class="p">],</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">gdf</span><span class="o">.</span><span class="n">geometry</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fitting bandwidth: 918447.5
+-0.4081785661481215 2918 6
+Bandwidth: 918447.5, Score: 12.816
+Fitting bandwidth: 1331552.5
+-0.4112848331214553 3073 6
+Bandwidth: 1331552.5, score: 12.823
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;gwlearn.search.BandwidthSearch at 0x14f9d16d0&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Get the optimal one.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">search</span><span class="o">.</span><span class="n">scores_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>918447.5     12.816357
+1331552.5    12.822570
+Name: oob_score, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>Golden section search with an adaptive KNN bandwidth.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">search</span> <span class="o">=</span> <span class="n">BandwidthSearch</span><span class="p">(</span>
+    <span class="n">GWLogisticRegression</span><span class="p">,</span>
+    <span class="n">fixed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">search_method</span><span class="o">=</span><span class="s2">&quot;interval&quot;</span><span class="p">,</span>
+    <span class="n">min_bandwidth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">max_bandwidth</span><span class="o">=</span><span class="mi">3084</span><span class="p">,</span>
+    <span class="n">interval</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">criterion</span><span class="o">=</span><span class="s2">&quot;aic&quot;</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">max_iter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>  <span class="c1"># passed to log regr</span>
+<span class="p">)</span>
+<span class="n">search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="n">preprocessing</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">gdf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">9</span><span class="p">:</span><span class="mi">15</span><span class="p">]),</span> <span class="n">columns</span><span class="o">=</span><span class="n">gdf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">9</span><span class="p">:</span><span class="mi">15</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span>
+    <span class="p">),</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">gdf</span><span class="o">.</span><span class="n">geometry</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-0.629958586572012 1859 6
+Bandwidth: 10.00, score: 13.260
+-0.47203824378599535 2630 6
+Bandwidth: 510.00, score: 12.944
+-0.43719177935367515 3085 6
+Bandwidth: 1010.00, score: 12.874
+-0.4368025610351277 3085 6
+Bandwidth: 1510.00, score: 12.874
+-0.43719306283176784 3085 6
+Bandwidth: 2010.00, score: 12.874
+-0.4395445591990635 3085 6
+Bandwidth: 2510.00, score: 12.879
+-0.44646119305842685 3085 6
+Bandwidth: 3010.00, score: 12.893
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;gwlearn.search.BandwidthSearch at 0x1764b7390&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">search</span><span class="o">.</span><span class="n">scores_</span><span class="o">.</span><span class="n">idxmin</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.int64(1510)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">search</span><span class="o">.</span><span class="n">scores_</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: &gt;
+</pre></div>
+</div>
+<img alt="_images/587a6a7f203e0fba320342830fd2951df44c161abdd7ee990c4de7045daea7a2.png" src="_images/587a6a7f203e0fba320342830fd2951df44c161abdd7ee990c4de7045daea7a2.png" />
+</div>
+</div>
+<p>Get the optimal one.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">search</span><span class="o">.</span><span class="n">optimal_bandwidth_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.int64(1510)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="prediction">
+<h2>Prediction<a class="headerlink" href="#prediction" title="Link to this heading">#</a></h2>
+<p>If you want to use the model for prediction, all the local models need to be retained. That may require significant memory for RF.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gwlr</span> <span class="o">=</span> <span class="n">GWLogisticRegression</span><span class="p">(</span>
+    <span class="n">bandwidth</span><span class="o">=</span><span class="mi">918447</span><span class="p">,</span>
+    <span class="n">fixed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">max_iter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>  <span class="c1"># passed to log regr</span>
+    <span class="n">measure_performance</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">keep_models</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">gwlr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="n">preprocessing</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">gdf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">9</span><span class="p">:</span><span class="mi">15</span><span class="p">]),</span> <span class="n">columns</span><span class="o">=</span><span class="n">gdf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">9</span><span class="p">:</span><span class="mi">15</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span>
+    <span class="p">),</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;FH90&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;FH90&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">(),</span>
+    <span class="n">gdf</span><span class="o">.</span><span class="n">geometry</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Parallel(n_jobs=-1)]: Using backend LokyBackend with 8 concurrent workers.
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;gwlearn.linear_model.GWLogisticRegression at 0x30711b890&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">preprocessing</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">gdf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">9</span><span class="p">:</span><span class="mi">15</span><span class="p">]),</span> <span class="n">columns</span><span class="o">=</span><span class="n">gdf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">9</span><span class="p">:</span><span class="mi">15</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Predict probabilities</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pp</span> <span class="o">=</span> <span class="n">gwlr</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">all_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">10</span><span class="p">],</span> <span class="n">geometry</span><span class="o">=</span><span class="n">gdf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span>
+<span class="n">pp</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>False</th>
+      <th>True</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.820086</td>
+      <td>0.179914</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.620665</td>
+      <td>0.379335</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.692175</td>
+      <td>0.307825</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.650646</td>
+      <td>0.349354</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.717526</td>
+      <td>0.282474</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.757832</td>
+      <td>0.242168</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.643172</td>
+      <td>0.356828</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.772874</td>
+      <td>0.227126</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.534443</td>
+      <td>0.465557</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>0.785177</td>
+      <td>0.214823</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Predict label (taking max of probabilities)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gwlr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">all_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">10</span><span class="p">],</span> <span class="n">geometry</span><span class="o">=</span><span class="n">gdf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">10</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5    False
+6    False
+7    False
+8    False
+9    False
+dtype: bool
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-forest">Random forest</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gradient-boosting">Gradient boosting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logistic-regression">Logistic regression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bandwidth-search">Bandwidth search</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction">Prediction</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Martin Fleischmann
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025-, gwlearn Developers.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
